@@ -105,3 +105,5 @@ done
 echo CERNLIB successfully build.
 
 cd ../
+
+echo -e '#!/bin/bash\n'"export CERN=$(readlink -f cernlib_build)\nexport CERN_LEVEL=2005\nexport PATH=\${CERN}/\${CERN_LEVEL}/bin:\${PATH}" > setup_cernlib.sh
