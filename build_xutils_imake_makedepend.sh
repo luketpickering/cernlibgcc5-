@@ -21,7 +21,7 @@ make install
 
 cd ../
 
-echo -e "#!/bin/bash\nexport PATH=$(readlink -f build/Linux/bin):\${PATH}" > setup.sh
+echo -e '#!/bin/bash'"\nexport PATH=$(readlink -f build/Linux/bin):\${PATH}" > setup.sh
 
 cd ../
 
@@ -44,7 +44,7 @@ make install
 
 cd ..
 
-echo "#!/bin/bash\nexport PATH=$(readlink -f build/Linux/bin):\${PATH}" > setup.sh
+echo -e '#!/bin/bash'"\nexport PATH=$(readlink -f build/Linux/bin):\${PATH}" > setup.sh
 
 fi
 
