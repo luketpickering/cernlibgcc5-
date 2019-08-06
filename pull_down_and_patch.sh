@@ -1,5 +1,5 @@
 #!/bin/bash
-
+    
 set -x
 
 if [ -z $1 ] || [ -e $1 ]; then
@@ -25,6 +25,7 @@ if [ ! -e .download_cache ]; then
   tar -zxvf cernlib.2005.install.2019.01.21.tgz
 
   cd -
+
 fi
 
 cp -r .download_cache/* ${1}/
