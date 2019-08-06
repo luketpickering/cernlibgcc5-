@@ -19,10 +19,10 @@ if [ ! -e .download_cache ]; then
 
   wget http://www-zeuthen.desy.de/linear_collider/cernlib/new/cernlib-2005-all-new.tgz
   tar -zxvf cernlib-2005-all-new.tgz
-  wget http://www-zeuthen.desy.de/linear_collider/cernlib/new/cernlib.2005.corr.2014.04.17.tgz
-  cp cernlib.2005.corr.2014.04.17.tgz cernlib.2005.corr.tgz
-  wget http://www-zeuthen.desy.de/linear_collider/cernlib/new/cernlib.2005.install.2014.04.17.tgz
-  tar -zxvf cernlib.2005.install.2014.04.17.tgz
+  wget http://www-zeuthen.desy.de/linear_collider/cernlib/new/cernlib.2005.corr.2019.01.21.tgz
+  cp cernlib.2005.corr.2019.01.21.tgz cernlib.2005.corr.tgz
+  wget http://www-zeuthen.desy.de/linear_collider/cernlib/new/cernlib.2005.install.2019.01.21.tgz
+  tar -zxvf cernlib.2005.install.2019.01.21.tgz
 
   cd -
 fi
@@ -30,7 +30,7 @@ fi
 cp -r .download_cache/* ${1}/
 cd ${1}
 
-patch < ../cernlib.gcc5andup.patch
+# patch < ../cernlib.gcc5andup.patch
 
 cd -
 
