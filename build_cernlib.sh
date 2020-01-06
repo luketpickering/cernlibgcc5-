@@ -89,6 +89,16 @@
 ./pull_down_and_patch.sh cernlib_build
 
 cd cernlib_build
+
+if [ -e /usr/include/freetype2/freetype ]; then
+  echo "Making local freetype2 symbolic link..."
+  mkdir -p 2005/src/include
+  ln -s /usr/include/freetype2/freetype 2005/src/include/
+fi
+
+find . -type f -exec grep "\-O3" \{} \; -exec echo \{} \; -exec sed -i "s:\-O3:-O:g" \{} \;
+find . -type f -exec grep "\-O2" \{} \; -exec echo \{} \; -exec sed -i "s:\-O2:-O:g" \{} \;
+
 export CERN=$(readlink -f .)
 export CERN_LEVEL=2005
 export CERN_ROOT=${CERN}/${CERN_LEVEL}
