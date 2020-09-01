@@ -28,10 +28,19 @@ q
 
 # Modify Lapack Make for gcc (i686 and x86_64 architectures)
 
-[ -z "$ARCH" ] && ARCH=`uname -m`
-GCCVERSION=`gcc -v 2>&1 | grep version | cut -d' ' -f3 | cut -c1 | tail -1`
+ARCH=`uname -m`
+cat > comptest.F <<EOF
+      program comptest
+      a = 0
+      end
+EOF
+GCCVSN=`cpp -dM comptest.F | grep __VERSION__ | cut -d" " -f3 | sed -s "s/\"//g" | cut -d . -f 1`
+FC=" "
+[ "$GCCVSN" = "3" ]&&FC=g77
+[ "$GCCVSN" -ge "4" ]&&FC=gfortran
+[ "$GCCVSN" -ge "6" ]&&FC=`echo ${FC} -no-pie -fallow-invalid-boz -std=legacy`
 
-if [ "${GCCVERSION}" = "3" ]; then
+if [ "${GCCVSN}" = "3" ]; then
     mv make.inc make.inc.orig
     ed -s make.inc.orig > /dev/null <<!
 41,43c
@@ -59,7 +68,7 @@ w make.inc
 q
 !
 fi
-if [ "${GCCVERSION}" -ge "4" ]; then
+if [ "${GCCVSN}" -ge "4" ]; then
 mv make.inc make.inc.orig
 ed -s make.inc.orig > /dev/null <<!
 41,43c
@@ -87,7 +96,7 @@ w make.inc
 q
 !
 fi
-if [ "${GCCVERSION}" -ge "6" ]; then
+if [ "${GCCVSN}" -ge "6" ]; then
 ed -s make.inc > /dev/null <<!
 26c
 LOADER   = gfortran -no-pie -fallow-invalid-boz -std=legacy
