@@ -31,7 +31,7 @@ fi
 cp -r .download_cache/* ${1}/
 cd ${1}
 
-# patch < ../cernlib.gcc5andup.patch
+patch < ../cernlib.gcc5andup.patch
 
 cd -
 

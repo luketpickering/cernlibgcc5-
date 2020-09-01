@@ -1,57 +1,22 @@
---- Install_cernlib	2010-07-31 16:16:59.000000000 -0500
-+++ Install_cernlib	2018-09-05 17:38:25.879143523 -0500
-@@ -30,7 +30,7 @@
- GCCVSN=`cpp -dM comptest.F | grep __VERSION__ | cut -d" " -f3 | cut -c 2`
+--- Install_cernlib	2019-01-21 09:43:58.000000000 -0600
++++ Install_cernlib	2020-09-01 15:19:13.517283546 -0500
+@@ -27,7 +27,7 @@
+       a = 0
+       end
+ EOF
+-GCCVSN=`cpp -dM comptest.F | grep __VERSION__ | cut -d" " -f3 | cut -c 2`
++GCCVSN=`cpp -dM comptest.F | grep __VERSION__ | cut -d" " -f3 | sed -s "s/\"//g" | cut -d . -f 1`
  FC=" "
  [ "$GCCVSN" = "3" ]&&FC=g77
--[ "$GCCVSN" = "4" ]&&FC=gfortran
-+[ "$GCCVSN" -ge "4" ]&&FC=gfortran
- if [ "$GCCVSN" = " " ]; then
-   echo " "
-   echo "====================================="
-
---- Install_cernlib_and_lapack	2010-07-31 16:59:49.000000000 -0500
-+++ Install_cernlib_and_lapack	2018-09-05 17:35:34.903148512 -0500
-@@ -30,7 +35,7 @@
- GCCVSN=`cpp -dM comptest.F | grep __VERSION__ | cut -d" " -f3 | cut -c 2`
+ [ "$GCCVSN" -ge "4" ]&&FC=gfortran
+--- Install_cernlib_and_lapack	2019-01-21 09:43:58.000000000 -0600
++++ Install_cernlib_and_lapack	2020-09-01 15:18:41.436517034 -0500
+@@ -27,7 +27,7 @@
+       a = 0
+       end
+ EOF
+-GCCVSN=`cpp -dM comptest.F | grep __VERSION__ | cut -d" " -f3 | cut -c 2`
++GCCVSN=`cpp -dM comptest.F | grep __VERSION__ | cut -d" " -f3 | sed -s "s/\"//g" | cut -d . -f 1`
  FC=" "
  [ "$GCCVSN" = "3" ]&&FC=g77
--[ "$GCCVSN" = "4" ]&&FC=gfortran
-+[ "$GCCVSN" -ge "4" ]&&FC=gfortran
- if [ "$GCCVSN" = " " ]; then
-   echo " "
-   echo "====================================="
-
---- Install_cernlib_src	2010-08-01 04:02:05.000000000 -0500
-+++ Install_cernlib_src	2018-09-05 18:09:07.291089789 -0500
-@@ -17,3 +17,7 @@
- 
- tar -zxvf $CERN/cernlib.2005.corr.tgz > cernlib_corr.lst
- 
-+echo "Patching Imake.cf..."
-+cd ${CERN}/2005/src/config
-+patch Imake.cf ${CERN}/Imake.cf.gcc5andup.patch
-+cd -
-
---- Install_lapack	2018-09-21 11:41:14.287273679 -0400
-+++ Install_lapack	2018-09-21 11:55:11.622007453 -0400
-@@ -59,7 +59,7 @@
- q
- !
- fi
--if [ "${GCCVERSION}" = "4" ]; then
-+if [ "${GCCVERSION}" -ge "4" ]; then
- mv make.inc make.inc.orig
- ed -s make.inc.orig > /dev/null <<!
- 41,43c
-
---- Imake.cf.gcc5andup.patch	1969-12-31 18:00:00.000000000 -0600
-+++ Imake.cf.gcc5andup.patch	2018-09-05 16:47:28.551232739 -0500
-@@ -0,0 +1,7 @@
-+397c397
-+< /*  old linux compiler suite (default)  */
-+---
-+> /*  new linux compiler suite (default)  */
-+398a399
-+> #define GCC4
-+
+ [ "$GCCVSN" -ge "4" ]&&FC=gfortran
