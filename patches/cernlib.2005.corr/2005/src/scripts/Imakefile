@@ -1,0 +1,16 @@
+
+/* this will correct for the new behaviour of the install (coreutils) 5.x
+ * non zero value indicates failure
+ * HV, Nov 2006
+ */
+INSTPGMFLAGS =
+
+InstallProgram(paw,$(CERN_BINDIR))
+
+#if defined(CERNLIB_SHIFT)
+InstallNamedProg(cernlib_shift,cernlib,$(CERN_BINDIR))
+#else
+InstallProgram(cernlib,$(CERN_BINDIR))
+#endif
+
+InstallProgram(gxint,$(CERN_BINDIR))

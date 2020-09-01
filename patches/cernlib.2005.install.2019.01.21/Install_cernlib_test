@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# The cernlib environment
+
+CERN=`pwd`
+CERN_ROOT=$CERN/$CERN_LEVEL
+CVSCOSRC=$CERN/$CERN_LEVEL/src
+PATH=$CERN_ROOT/bin:$PATH
+
+export CERN
+export CERN_LEVEL
+export CERN_ROOT 
+export CVSCOSRC
+export PATH
+
+
+# test everything
+for d in packlib mathlib graflib geant321 mclibs phtools
+do
+    cd $CERN_ROOT/build/${d}
+    gmake test > ../log/t_${d}.`date +%m%d` 2>&1
+done
+
+
+cd $CERN
+

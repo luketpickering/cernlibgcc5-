@@ -1,0 +1,21 @@
+Source: cfortran
+Section: devel
+Priority: optional
+Maintainer: Debian Science Maintainers <debian-science-maintainers@lists.alioth.debian.org>
+Uploaders: Bastien ROUCARIÈS <roucaries.bastien+debian@gmail.com>
+Vcs-Git: git://git.debian.org/git/debian-science/packages/cfortran.git
+Vcs-Browser: http://git.debian.org/?p=debian-science/packages/cfortran.git
+DM-Upload-Allowed: yes
+Homepage: http://www-zeus.desy.de/~burow/cfortran/
+Build-Depends: debhelper (>= 5.0.0)
+Standards-Version: 3.8.3
+
+Package: cfortran
+Architecture: all
+Recommends: gcc | c-compiler, gfortran | fortran-compiler
+Conflicts: libcfitsio-dev (<< 2.440-1)
+Description: Header file permitting Fortran routines to be called in C/C++
+ cfortran.h is an easy-to-use powerful bridge between C and FORTRAN.
+ It provides a completely transparent, machine independent interface between
+ C and FORTRAN routines (= subroutines and/or functions) and global data,
+ i.e. structures and COMMON blocks.

@@ -1,0 +1,57 @@
+#!/usr/bin/make -f
+# Sample debian/rules that uses debhelper.
+# GNU copyright 1997 to 1999 by Joey Hess.
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+build: build-stamp
+build-stamp:
+	dh_testdir
+	# unpack examples:
+	tar xvzf cfortran.examples.tar.gz
+	# fix buffer overrun in one of the examples (cf. #489886 in BTS)
+	sed -i 's/happy/happy    /g' eg/fd/fd.c
+	# remove unnecessary (and in some cases broken) symlinks:
+	find eg -name \*.C -type l -exec rm -f \{\} \;
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp
+	rm -rf eg
+
+	# Add here commands to clean up after the build process.
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+
+	# Add here commands to install the package into debian/cfortran.
+	cp -p cfortran.h debian/cfortran/usr/include/
+
+# Build architecture-dependent files here.
+binary-arch: build install
+# We have nothing to do here.
+
+# Build architecture-independent files here.
+binary-indep: build install
+	dh_testdir
+	dh_testroot
+	dh_installdocs
+	dh_installexamples
+	dh_installchangelogs
+	dh_compress -X.c -X.f -X.htm -X.html
+	dh_link usr/include/cfortran.h usr/include/cfortran/cfortran.h
+	dh_fixperms
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install

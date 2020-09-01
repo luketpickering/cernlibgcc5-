@@ -1,0 +1,45 @@
+#!/bin/sh
+
+
+# check that script is executed as dot (.) script , then $0 should be -sh
+EXIT=0
+if [ "$(basename -- $0)" = "cernlib_env" ]; then
+   echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   echo 'You invoked the cernlib_env script without the leading dot (.) !'
+   echo In order to initialize the CERN environment correctly, you *MUST*
+   echo call the cernlib_env script with a leading dot and a blank.
+   echo
+   echo Please call:
+   echo . `basename -- $0` $@
+   echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   EXIT=1
+fi
+
+if [ "$EXIT" != 1 ] ; then
+
+# Establish the environment variables for the build procedures
+# Depending on the system, other directories may need to be added to the PATH
+# e.g. for the build tools and alternative compilers.
+
+if [ -e "src_Imakefile.tar.gz" ]; then
+    CERN=`pwd`
+else
+    CERN=/cern
+fi
+
+if [ -e "$CERN/src_Imakefile.tar.gz" ]; then
+    CERN_LEVEL=`gunzip -c $CERN/src_Imakefile.tar.gz | tar tf - | awk -F/ '{print $1}'`
+else
+    CERN_LEVEL=pro
+fi
+
+CERN_ROOT=$CERN/$CERN_LEVEL
+PATH=$CERN_ROOT/bin:$PATH
+
+export CERN
+export CERN_LEVEL
+export CERN_ROOT
+export PATH
+
+fi # "$EXIT" != 1
+

@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# Establish the environment variables for the build procedures
+# Depending on the system, other directories may need to be added to the PATH
+# e.g. for the build tools and alternative compilers.
+
+CERN_LEVEL=`gunzip -c src_Imakefile.tar.gz | tar tf - | awk -F/ '{print $1}'`
+
+CERN=`pwd`
+CERN_ROOT=$CERN/$CERN_LEVEL
+CVSCOSRC=$CERN/$CERN_LEVEL/src
+PATH=$CERN_ROOT/bin:$PATH
+
+export CERN
+export CERN_LEVEL
+export CERN_ROOT 
+export CVSCOSRC
+export PATH
+
+
+# install the executables
+logfile=make_patchy5.`date +%m%d`
+cd $CERN_ROOT/build
+gmake patchy/Makefile
+cd $CERN_ROOT/build/patchy
+gmake  install.bin  >> $CERN_ROOT/build/log/$logfile 2>&1
+
+cd $CERN
+

@@ -1,0 +1,164 @@
+cfortran (4.4-14) unstable; urgency=low
+
+  *  Add license text to cfortran.h (Closes: #507429).
+  *  Warm if user does not use -D flags as documented in README.debian 
+  (Closes: #497023).
+  *  New maintainer (Closes: #508500).
+  *  Bump policy version.
+
+ --  Bastien ROUCARIÈS <roucaries.bastien+debian@gmail.com>  Wed, 14 Oct 2009 14:56:50 +0200
+
+cfortran (4.4-13) unstable; urgency=low
+
+  * Bump Standards-Version to 3.8.0 (no changes).
+  * Make the default behavior on CYGWIN, Linux (with gcc) and OS X be to
+    assume gfortran (rather than g77/f2c) if the FORTRAN compiler has
+    otherwise been left unspecified.  Thanks Davide Mancusi for the prod.
+  * Fix a buffer overrun bug found by Jean-Guillaume Piccinali in one of
+    the example programs (fd/fd.c).  (Closes: #489886.)
+
+ -- Kevin B. McCarty <kmccarty@debian.org>  Tue, 26 Aug 2008 20:55:16 -0700
+
+cfortran (4.4-12) unstable; urgency=low
+
+  * Bump Standards-Version to 3.7.3 (no changes).
+  * Restore commented-out "extern" in COMMON_BLOCK_DEF() macro, by
+    request of Jacek Holeczek <jacek.m.holeczek@gmail.com>.
+    N.B. This will cause "paw" source package to FTBFS due to a
+    Debian-specific patch to paw, so I will upload a fix for that shortly.
+  * Add {} around lone ";" in three empty "while" bodies to get rid of
+    spurious compiler warnings with recent gcc.  Thanks to Rene Brun
+    <Rene.Brun@cern.ch>.
+  * Change package recommends from g77 to gfortran.
+  * Add README.Debian to mention that most people using gfortran will want
+    to use -DgFortran (those using g77 will want to keep using -Dg77Fortran
+    or -Df2cFortran) and to discuss the differences.
+
+ -- Kevin B. McCarty <kmccarty@debian.org>  Wed, 14 May 2008 09:07:09 -0700
+
+cfortran (4.4-11) unstable; urgency=low
+
+  * Bump Standards-Version to 3.7.2 (no changes).
+  * Build-Depends: debhelper (instead of Build-Depends-Indep) to fix
+    Lintian error.
+
+ -- Kevin B. McCarty <kmccarty@debian.org>  Mon, 27 Nov 2006 09:16:31 -0500
+
+cfortran (4.4-10) unstable; urgency=low
+
+  * Add modifications so that gfortran (and g77 with -fno-f2c flag) are
+    supported when the C/C++ compiler is invoked with flag -DgFortran
+    (or gFortran is otherwise #define'd).  Possibly at some later time when
+    gfortran is the default FORTRAN compiler on Debian, this will be made
+    the default.  Thanks to William Pence <pence@milkyway.gsfc.nasa.gov>
+    for bringing up the issue.  Mentioned in debian/NEWS.
+  * Add modifications by William Pence to define a LONGLONG type more
+    carefully.
+  * Bump debian/compat to 5.
+
+ -- Kevin B. McCarty <kmccarty@debian.org>  Wed,  5 Apr 2006 17:01:35 -0400
+
+cfortran (4.4-9) unstable; urgency=low
+
+  * Add modifications from Martin Reinecke <martin@MPA-Garching.MPG.DE>
+    for partial INTEGER*8 (long long) support.
+  * Not updating the documentation yet as the cfitsio team has requested
+    to leave this feature undocumented for now.
+
+ -- Kevin B. McCarty <kmccarty@debian.org>  Fri, 23 Dec 2005 08:21:35 -0500
+
+cfortran (4.4-8) unstable; urgency=low
+
+  * cfortran.h: Improved to enforce the fact that f2c and g77 generate code
+    from FORTRAN REAL functions that returns a C "double".  This should fix
+    runtime code breakage on some platforms such as AMD64.  See NEWS.Debian
+    for more information.
+  * cfortran.doc and cfortran.html: updated to reflect the change.
+
+ -- Kevin B. McCarty <kmccarty@debian.org>  Fri,  9 Dec 2005 17:43:06 -0500
+
+cfortran (4.4-7) unstable; urgency=low
+
+  * Update FSF address in debian/copyright.
+  * Update maintainer email in debian/control and debian/copyright.
+  * Update debhelper compatibility to version 4.
+  * Update Standards-Version to 3.6.2 (no changes).
+  * Clean up debian/rules a bit.
+  * Unpack cfortran.examples.tar.gz into /usr/share/doc/cfortran/examples
+    to make it easier to explore (removing unneeded symlinks *.C -> *.c).
+
+ -- Kevin B. McCarty <kmccarty@debian.org>  Tue, 22 Nov 2005 13:35:38 +0000
+
+cfortran (4.4-6) unstable; urgency=medium
+
+  * Recommend "gcc | c-compiler" and "g77 | fortran-compiler" instead of
+    just the virtual packages.  This avoids the situation of a person
+    naively installing cfortran with aptitude and ending up with some
+    random little-known compilers.
+
+ -- Kevin B. McCarty <kmccarty@princeton.edu>  Fri, 10 Dec 2004 08:53:47 -0500
+
+cfortran (4.4-5) unstable; urgency=low
+
+  * Install a symlink from /usr/include/cfortran/cfortran.h to
+    /usr/include/cfortran.h, since some build systems expect to find
+    cfortran.h (and various other Cernlib include files) in
+    /usr/include/cfortran.  Fixes part of #243860.
+
+ -- Kevin B. McCarty <kmccarty@princeton.edu>  Wed, 28 Apr 2004 13:20:50 -0400
+
+cfortran (4.4-4) unstable; urgency=low
+
+  * cfortran.h: Add support for Intel Fortran compiler by #defining f2cFortran
+    when it's used or INTEL_COMPILER is #defined (closes: #222318).
+
+ -- Kevin B. McCarty <kmccarty@princeton.edu>  Sat, 29 Nov 2003 17:38:03 -0500
+
+cfortran (4.4-3) unstable; urgency=low
+
+  * debian/copyright: Add email from upstream licensing cfortran under LGPL.
+    Correct licensing statement; upstream licensed it specifically under
+    Library GPL (i.e. version 2), not Lesser GPL (i.e. version 2.1).
+  * debian/changelog: Remove emacs variable cruft from the bottom.
+  * debian/control: Standards-Version now 3.6.1 (no changes).
+
+ -- Kevin B. McCarty <kmccarty@princeton.edu>  Fri, 10 Oct 2003 14:54:52 -0400
+
+cfortran (4.4-2) unstable; urgency=low
+
+  * No longer conflict with current cfitsio-dev, as it no longer includes
+    a cfortran.h file.
+  * Merge small modifications (mainly more "#if defined" tests) from
+    CFITSIO code.
+
+ -- Kevin B. McCarty <kmccarty@princeton.edu>  Mon,  3 Mar 2003 11:19:26 +0100
+
+cfortran (4.4-1) unstable; urgency=low
+
+  * debian/control: use Build-Depends-Indep instead of Build-Depends
+  * Remove README.debian; edit cfortran.h to auto-detect gcc with __GNUC__.
+  * Fix a few more typos in documentation.
+
+ -- Kevin B. McCarty <kmccarty@princeton.edu>  Sat, 18 Jan 2003 18:14:37 +0100
+
+cfortran (4.4-0.3) unstable; urgency=low
+
+  * Escape "&", "<" and ">" characters in HTML documentation and fix a
+    couple of typos.
+  * Include note in cfortran.{html,doc} that it is now also licensed
+    under LGPL.
+
+ -- Kevin B. McCarty <kmccarty@princeton.edu>  Sat, 18 Jan 2003 13:23:14 +0100
+
+cfortran (4.4-0.2) unstable; urgency=low
+
+  * Fix links in HTML documentation.
+  * Add cfortran.examples.tar.gz package to examples directory.
+
+ -- Kevin B. McCarty <kmccarty@princeton.edu>  Sun,  8 Dec 2002 04:01:11 +0100
+
+cfortran (4.4-0.1) unstable; urgency=low
+
+  * Initial release as a Debian package.
+
+ -- Kevin B. McCarty <kmccarty@princeton.edu>  Sat,  9 Nov 2002 23:30:19 +0100

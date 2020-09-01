@@ -1,0 +1,25 @@
+cfortran (4.4-10) unstable; urgency=low
+
+  cfortran.h has been enhanced to support the gfortran compiler.  Use the
+  flag -DgFortran to your C/C++ compiler, or #define gFortran somewhere in
+  your source code above the #include <cfortran.h>.  Doing this is also
+  likely necessary if you use g77 with the -fno-f2c flag, or f2c with the
+  -R flag.
+
+ -- Kevin B. McCarty <kmccarty@debian.org>  Wed,  5 Apr 2006 12:56:15 -0400
+
+cfortran (4.4-8) unstable; urgency=low
+
+  In this version of cfortran, the header file cfortran.h has been improved,
+  as planned by the original author, to enforce the fact that f2c and g77
+  generate code from FORTRAN REAL functions that returns a C "double".
+  This should fix runtime breakage with cfortran on some platforms (e.g.
+  AMD64); see for instance http://gcc.gnu.org/bugzilla/show_bug.cgi?id=15397
+
+  If you create libraries that depend upon cfortran to build, it is possible
+  that this change could affect the ABI of your library.  Be particularly
+  alert to this possibility if you use the PROTOCCALLSFFUN* and/or
+  FCALLSCFUN* macros with the first argument to the macro(s) (i.e. the
+  function return type) being "FLOAT".
+
+ -- Kevin B. McCarty <kmccarty@debian.org>  Fri,  9 Dec 2005 17:49:46 -0500

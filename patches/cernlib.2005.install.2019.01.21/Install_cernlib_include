@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# The cernlib environment
+
+CERN=`pwd`
+CERN_ROOT=$CERN/$CERN_LEVEL
+CERN_INCLUDEDIR=$CERN_ROOT/include
+CVSCOSRC=$CERN/$CERN_LEVEL/src
+PATH=$CERN_ROOT/bin:$PATH
+
+export CERN
+export CERN_LEVEL
+export CERN_ROOT
+export CERN_INCLUDEDIR
+export CVSCOSRC
+export PATH
+
+
+# create the "include" subdirectory
+cd $CERN_ROOT/
+rm -rf include
+mkdir -p include
+
+# get the log file name of start_cern
+cd $CERN_ROOT/build/log
+logfile=`ls | grep "make\."`
+
+# install "includes"
+cd $CERN_ROOT/build
+gmake install.include >> ./log/$logfile 2>&1
+
+
+cd $CERN
+

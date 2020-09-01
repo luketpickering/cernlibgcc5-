@@ -1,0 +1,31 @@
+SRCS_C= halloc.c hbvers.c hbpqry.c
+
+#ifdef CERNLIB_UNIX
+#if defined(CERNLIB_APOLLO) || defined(CERNLIB_CONVEX) || defined(CERNLIB_WINNT)
+SRCS_C+= hmmap.c
+#else
+SRCS_C+= hshm.c
+#endif
+#endif
+
+#if defined(CERNLIB_HPUX) ||  defined(CERNLIB_IBMRT)
+EXTRA_DEFINES := $(EXTRA_DEFINES) -Dextname
+#endif
+
+#if defined(CERNLIB_LINUX)
+EXTRA_DEFINES := $(EXTRA_DEFINES) -D_SVID_SOURCE
+#endif
+
+#if defined(CERNLIB_LINUX) && !defined(CERNLIB_QMLXIA64)
+EXTRA_DEFINES := $(EXTRA_DEFINES) -Df2cFortran
+#endif
+
+#if defined(CERNLIB_QMLXIA64) 
+#if defined(CERNLIB_GFORTRAN)
+EXTRA_DEFINES := $(EXTRA_DEFINES) -DgFortran
+#else
+EXTRA_DEFINES := $(EXTRA_DEFINES) -Df2cFortran
+#endif
+#endif
+
+SubdirLibraryTarget(NullParameter,NullParameter)

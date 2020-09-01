@@ -1,0 +1,43 @@
+#!/bin/sh
+
+# The cernlib environment
+
+CERN=`pwd`
+CERN_ROOT=$CERN/$CERN_LEVEL
+CVSCOSRC=$CERN/$CERN_LEVEL/src
+PATH=$CERN_ROOT/bin:$PATH
+
+export CERN
+export CERN_LEVEL
+export CERN_ROOT 
+export CVSCOSRC
+export PATH
+
+
+# is the $CERN/README O.K.?
+cd $CERN
+if ! [ -e "README" ]; then
+    if [ -e "README_cernlib" ]; then
+	rm -f README
+	ln -s README_cernlib README
+    else
+	echo "Warning: the $CERN/README file does NOT exist!"
+    fi
+fi
+
+
+# is the $CERN_ROOT/lib/xsneut95.dat O.K.?
+cd $CERN_ROOT/lib
+if ! [ -e "xsneut95.dat" ]; then
+    if [ -e "../src/geant321/data/xsneut95.dat" ]; then
+	rm -f xsneut95.dat
+	cp ../src/geant321/data/xsneut95.dat ./
+	chmod a=r xsneut95.dat
+    else
+	echo "Warning: the $CERN_ROOT/lib/xsneut95.dat file does NOT exist!"
+    fi
+fi
+
+
+cd $CERN
+

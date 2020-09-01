@@ -1,0 +1,46 @@
+#!/bin/sh
+
+CERN_LEVEL=`gunzip -c src_Imakefile.tar.gz | tar tf - | awk -F/ '{print $1}'`
+
+CERN=`pwd`
+CERN_ROOT=$CERN/$CERN_LEVEL
+CVSCOSRC=$CERN/$CERN_LEVEL/src
+PATH=$CERN_ROOT/bin:$PATH
+
+export CERN
+export CERN_LEVEL
+export CERN_ROOT 
+export CVSCOSRC
+export PATH
+
+                   
+# get the log file name of make_patchy
+cd $CERN_ROOT/build
+touch log/patchy.`date +%m%d`
+cd $CERN_ROOT/build/log
+logfile=`ls | grep "patchy\."`
+
+# Install the old patchy 4 binaries in $CERN/patchy/4.15/bin
+# (On x86_64 platforms this will create x86_64 binaries)
+
+mkdir $CERN/patchy_install
+cd $CERN/patchy_install
+tar -zxvf $CERN/patchy4.tar.gz >> $CERN_ROOT/build/log/$logfile 2>&1
+ed -s p4boot.sh0 > /dev/null <<!
+280c
+ set  CLD  = \`echo \${FC}\`
+.
+8c
+ set  KERNLIB = \`echo \${CERNLIB_KERNLIB}\`
+.
+w p4boot.sh0
+q
+!
+export CERNLIB_KERNLIB=$CERN_ROOT/lib/libpacklib.a
+./make_patchy >> $CERN_ROOT/build/log/$logfile 2>&1
+mv patchy ../
+cd ../
+rm -rf patchy_install
+
+cd $CERN
+

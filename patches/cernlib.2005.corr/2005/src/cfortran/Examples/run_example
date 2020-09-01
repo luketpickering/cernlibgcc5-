@@ -1,0 +1,96 @@
+#!/bin/zsh 
+
+echo "This script requires a gcc compiler suite"
+if [ $# -eq 0 ]; then
+  ERROR=1
+elif [ "$1" = "" ]; then
+  ERROR=1
+fi
+if [ "$ERROR" = "1" ]; then
+cat <<EOM
+Usage: $(basename $0) progname (= chbook-example, chigz-example, ...)
+EOM
+exit 1
+fi
+
+
+typeset CERN=$PWD/../../../../
+typeset CERN_LEVEL=2005
+typeset CERNLIB=$CERN/$CERN_LEVEL
+export CERN
+export CERN_LEVEL
+
+# check for compiler version
+cat > comptest.F <<EOF
+      program comptest
+      a = 0
+      end
+EOF
+GCCVSN=`cpp -dM comptest.F | grep __VERSION__ | cut -d" " -f3 | cut -c 2`
+rm -f comptest.*
+FTNLIB=" "
+if [ "$GCCVSN" = "3" ]; then
+  FTNLIB="-lg2c"
+elif [ "$GCCVSN" -ge "4" ]; then 
+  FTNLIB="-lgfortran"
+else
+  echo "Unsupported compiler suite"
+fi
+
+# check for minuit test
+if [ "$1" = "minuit-main" ]; then
+  if [ $# -ne 2 ]; then
+    ERROR=1
+  elif [ "$2" = "" ]; then
+    ERROR=1
+  fi
+  if [ "$ERROR" = "1" ]; then
+  cat <<EOM
+Usage: $(basename $0) $1 minuit-fcn.c
+or
+Usage: $(basename $0) $1 minuit-fcn.f
+EOM
+  exit 1
+  fi
+  rm -rf run
+  echo "creating a run subdirectory"
+  mkdir -p run
+  cd run
+  EXTNAME=""
+  [ "$2" = "minuit-fcn.f" ]&&EXTNAME="-DEXTNAME"
+  gcc -c -I$CERNLIB/include -I$CERNLIB/include/cfortran -I$CERNLIB/include/hbook -g -fmessage-length=0 -fPIC \
+      -DCERNLIB_LINUX -DCERNLIB_UNIX -DCERNLIB_LNX -DCERNLIB_QMGLIBC -DCERNLIB_QMLXIA64 \
+      ../$2
+  gcc -c -I$CERNLIB/include -I$CERNLIB/include/cfortran -I$CERNLIB/include/hbook -g -fmessage-length=0 -fPIC \
+      -o $1.o -DCERNLIB_LINUX -DCERNLIB_UNIX -DCERNLIB_LNX -DCERNLIB_QMGLIBC -DCERNLIB_QMLXIA64 \
+      $EXTNAME \
+      ../$1.c 
+  gcc  -g -o $1.c.exe $1.o minuit-fcn.o `$CERNLIB/bin/cernlib pawlib graflib/X11 packlib mathlib kernlib` $FTNLIB
+
+  echo "executing $1.c.exe in the run subdirectory"
+  echo " "
+  ./$1.c.exe
+
+else
+
+# all other tests
+  rm -rf run
+  echo "creating a run subdirectory"
+  mkdir -p run
+  [ "$1" = "pamain" ]&&cp pawex1.kumac ./run
+  cd run
+  gcc -c -I$CERNLIB/include -I$CERNLIB/include/cfortran -I$CERNLIB/include/hbook -g -fmessage-length=0 -fPIC \
+      -o $1.o -DCERNLIB_LINUX -DCERNLIB_UNIX -DCERNLIB_LNX -DCERNLIB_QMGLIBC -DCERNLIB_QMLXIA64 \
+      ../$1.c
+  gcc  -g -o $1.c.exe $1.o `$CERNLIB/bin/cernlib pawlib graflib/X11 packlib mathlib kernlib` $FTNLIB
+
+  echo "executing $1.c.exe in the run subdirectory"
+  [ "$1" = "chigz-example" ]&&echo "this requires additional '<return>' and 'q <return>' from your terminal"
+  [ "$1" = "pamain" ]&&echo "this requires additional '<return>' and 'exec pawex1.kumac <return>' and 'q <return>' from your terminal"
+  [ "$1" = "chplot-example" ]&&echo "this requires an additional 'q <return>' from your terminal"
+  echo " "
+  ./$1.c.exe > $1.c.log
+  echo "check for output if any the run subdirectory"
+
+fi
+

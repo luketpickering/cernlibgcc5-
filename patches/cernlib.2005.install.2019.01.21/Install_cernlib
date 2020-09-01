@@ -1,0 +1,123 @@
+#!/bin/sh
+
+echo "===================="
+echo "CERNLIB installation"
+echo "===================="
+
+# Define the cern root directory
+
+export CERN=$PWD
+
+# Get the original cernlib sources + corrections
+
+echo "installing cernlib sources"
+
+./Install_cernlib_src
+
+
+# Define the cernlib version
+
+export CERN_LEVEL=`gunzip -c src_Imakefile.tar.gz | tar tf - | awk -F/ '{print $1}'`
+
+# Get the architecture and the gnu compiler version
+
+ARCH=`uname -m`
+cat > comptest.F <<EOF
+      program comptest
+      a = 0
+      end
+EOF
+GCCVSN=`cpp -dM comptest.F | grep __VERSION__ | cut -d" " -f3 | sed -s "s/\"//g" | cut -d . -f 1`
+FC=" "
+[ "$GCCVSN" = "3" ]&&FC=g77
+[ "$GCCVSN" -ge "4" ]&&FC=gfortran
+[ "$GCCVSN" -ge "6" ]&&FC=`echo ${FC} -no-pie -fallow-invalid-boz`
+if [ "$GCCVSN" = " " ]; then
+  echo " "
+  echo "====================================="
+  echo "Expected GCC compiler suite not found"
+  echo "====================================="
+  rm -f comptest.*
+  exit 1
+else
+  check="Checking for Fortran Compiler... "
+  $FC -c comptest.F >/dev/null 2>&1
+  if test -s comptest.o; then
+    echo "${check}${FC}"
+  else
+    echo "${check} no"
+    rm -f comptest.*
+    exit 1
+  fi
+fi
+rm -f comptest.*
+export ARCH
+export FC
+
+
+echo "======================================"
+echo "Configuration summary"
+echo "---------------------"
+echo "Architecture is: "$ARCH
+echo "Fortran compiler used: "$FC
+echo "CERN_LEVEL is: "$CERN_LEVEL
+echo "======================================"
+
+
+# Fix the cernlib script (BLAS-3 and LAPACK-3 provided by the system)
+
+cp -a $CERN/cernlib.fixed $CERN/$CERN_LEVEL/src/scripts/cernlib
+
+
+# Install the cernlib libraries
+
+echo "installing cernlib libraries"
+
+./Install_cernlib_lib
+
+
+# Test the cernlib libraries
+
+echo "testing cernlib libraries"
+
+./Install_cernlib_test
+
+
+# Install the executables
+
+echo "installing cernlib executables"
+
+./Install_cernlib_bin
+
+
+# Install the old patchy 4 executables
+
+echo "installing the old patchy 4 executables"
+
+./Install_old_patchy4
+
+
+# Install the patchy 5 executables
+
+echo "installing the patchy 5 executables"
+
+./Install_cernlib_patchy
+
+
+# Install cernlib "includes"
+
+echo "installing cernlib includes"
+
+./Install_cernlib_include
+
+
+echo "fixing known installation problems"
+
+./Install_cernlib_fixes
+
+
+# All done
+
+echo "Complete cernlib installation finished"
+echo "Check the log files in the build/log directory"
+

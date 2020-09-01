@@ -1,0 +1,112 @@
+cfortran for Debian
+-------------------
+
+The principal FORTRAN compiler in Debian is now gfortran.  Please note that if
+you use gfortran to build FORTRAN code, you must "#define gFortran" in your C
+code or use -DgFortran on the command line to achieve an equivalent effect
+before any "#include <cfortran.h>" line.  If you still use g77 to build FORTRAN
+code, or if you use the -ff2c flag to gfortran, you must instead
+"#define g77Fortran" or use -Dg77Fortran.  (Using g77 with the -fno-f2c flag
+requires the gFortran macro be defined to cfortran.h.)
+
+Note also that the f2cFortran flag behaves equivalently to g77Fortran, as g77
+and f2c have the same calling conventions.  The use of this flag is discouraged
+since prior to cfortran release 4.4-10, it instead behaved like gFortran (but
+at that time the gFortran flag was not supported, and there was no way to
+invoke correct behavior for g77).
+
+For instance, each of the following four sets of compile commands are OK:
+
+gcc -DgFortran -c ccode.c
+gfortran -c fcode.F
+gfortran fcode.o ccode.o -o my_executable
+
+gcc -Dg77Fortran -c ccode.c
+gfortran -ff2c -c fcode.F
+gfortran -ff2c fcode.o ccode.o -o my_executable
+
+gcc -Dg77Fortran -c ccode.c
+g77 -c fcode.F
+g77 fcode.o ccode.o -o my_executable
+
+gcc -DgFortran -c ccode.c
+g77 -fno-f2c -c fcode.F
+g77 -fno-f2c fcode.o ccode.o -o my_executable
+
+Supplying an incorrect flag to C code that uses cfortran.h macros makes it
+likely that your program will not work correctly on some architectures.  In
+particular, the example program below will not work on the AMD64 platform if
+your FORTRAN compiler is mismatched to the cfortran flag you use.  (Try it and
+see.)  For more information, see the discussion of the -ff2c flag in gfortran
+documentation or the -fno-f2c flag in g77 documentation, and see also
+http://gcc.gnu.org/PR15397 .
+
+Test program for cfortran
+-------------------------
+
+*     File "fcode.F"
+      program test
+      implicit none
+*
+      real funct1, funct2, retval
+
+      print *, 'All results below should be (approx.) 1.1111'
+      print *, ''
+
+*     Try calling functions from FORTRAN
+      retval  = funct1 (1.1111)
+      print *, 'Call FORTRAN from FORTRAN: retval ', retval
+      print *, ''
+      retval  = funct2 (1.1111)
+      print *, 'Call C from FORTRAN:       retval ', retval
+      print *, ''
+
+*     Try calling functions from C
+      call ccode()
+
+      stop
+      end
+
+      real function funct1 ( inval )
+
+      implicit none
+      real inval, retval
+
+      retval = inval
+      print *, '  In FORTRAN func: return value = ', retval
+      funct1 = retval
+
+      end
+*     End of "fcode.F"
+
+-------------------------
+
+/* File "ccode.c" */
+#include <stdio.h>
+#include <cfortran.h>
+
+/* Declare C prototype for FORTRAN FUNCT1() */
+PROTOCCALLSFFUN1(FLOAT, FUNCT1, funct1, FLOAT)
+#define FUNCT1(in) CCALLSFFUN1(FUNCT1, funct1, FLOAT, in)
+
+float funct2(float in) {
+  printf("   In C func:       return value =   %f\n", in);
+  return in;
+}
+
+void ccode(void) {
+  float retval = 1.1111;
+  retval = FUNCT1(1.1111);
+  printf(" Call FORTRAN from C:       retval   %f\n\n", retval);
+  retval = funct2(1.1111);
+  printf(" Call C from C:             retval   %f\n\n", retval);
+}
+
+/* Make funct2() and ccode() accessible from FORTRAN */
+FCALLSCFUN1(FLOAT, funct2, FUNCT2, funct2, FLOAT)
+FCALLSCSUB0(ccode, CCODE, ccode)
+
+/* End of "ccode.c" */
+-------------------------
+
+ -- Kevin B. McCarty <kmccarty@debian.org>  Thu, 08 May 2008
