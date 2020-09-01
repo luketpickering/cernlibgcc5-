@@ -90,7 +90,7 @@ fi
 if [ "${GCCVERSION}" -ge "6" ]; then
 ed -s make.inc > /dev/null <<!
 26c
-LOADER   = gfortran -no-pie -fallow-invalid-boz
+LOADER   = gfortran -no-pie -fallow-invalid-boz -std=legacy
 .
 w make.inc
 q

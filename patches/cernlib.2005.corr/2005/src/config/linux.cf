@@ -240,7 +240,7 @@ endif									@@\
 #   define CERNLIB_GFORTRAN
 #  elif defined(GCC4)
 #   if ((GCC4) >= 6)
-#    define FortranCmd		gfortran -no-pie -fallow-invalid-boz
+#    define FortranCmd		gfortran -no-pie -fallow-invalid-boz -std=legacy
 #   else
 #    define FortranCmd		gfortran
 #   endif
