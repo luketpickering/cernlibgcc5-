@@ -3,6 +3,8 @@
 set -x
 set -e
 
+BUILD_ROOT_DIR=$(pwd)
+
 PATCHES_DIR=$(pwd)/patches
 
 if [ -z $1 ] || [ -e $1 ]; then
@@ -42,7 +44,7 @@ if [ ! -e .download_cache ]; then
   cp ./* ${CACHE_DIR}/
   cd -
 
-  cd -
+  cd ${BUILD_ROOT_DIR}
 
 fi
 
