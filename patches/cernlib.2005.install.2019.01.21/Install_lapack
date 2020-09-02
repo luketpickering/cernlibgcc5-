@@ -38,7 +38,7 @@ GCCVSN=`cpp -dM comptest.F | grep __VERSION__ | cut -d" " -f3 | sed -s "s/\"//g"
 FC=" "
 [ "$GCCVSN" = "3" ]&&FC=g77
 [ "$GCCVSN" -ge "4" ]&&FC=gfortran
-[ "$GCCVSN" -ge "6" ]&&FC=`echo ${FC} -no-pie -fallow-invalid-boz -std=legacy`
+[ "$GCCVSN" -ge "6" ]&&FC=`echo ${FC} -no-pie -fallow-invalid-boz -std=legacy -fcommon`
 
 if [ "${GCCVSN}" = "3" ]; then
     mv make.inc make.inc.orig
@@ -99,7 +99,7 @@ fi
 if [ "${GCCVSN}" -ge "6" ]; then
 ed -s make.inc > /dev/null <<!
 26c
-LOADER   = gfortran -no-pie -fallow-invalid-boz -std=legacy
+LOADER   = gfortran -no-pie -fallow-invalid-boz -std=legacy -fcommon
 .
 w make.inc
 q
