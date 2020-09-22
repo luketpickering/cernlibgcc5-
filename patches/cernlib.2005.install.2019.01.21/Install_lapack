@@ -96,7 +96,7 @@ w make.inc
 q
 !
 fi
-if [ "${GCCVSN}" -ge "6" ]; then
+if [ "${GCCVSN}" -ge "10" ]; then
 ed -s make.inc > /dev/null <<!
 26c
 LOADER   = gfortran -no-pie -fallow-invalid-boz -std=legacy -fcommon
@@ -104,6 +104,15 @@ LOADER   = gfortran -no-pie -fallow-invalid-boz -std=legacy -fcommon
 w make.inc
 q
 !
+elif [ "${GCCVSN}" -ge "6" ]; then
+ed -s make.inc > /dev/null <<!
+26c
+LOADER   = gfortran -no-pie -std=legacy -fcommon
+.
+w make.inc
+q
+!
+fi
 fi
 
 # use INTRINSIC ETIME

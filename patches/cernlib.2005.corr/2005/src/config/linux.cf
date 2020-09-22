@@ -239,8 +239,10 @@ endif									@@\
 #   define CERNLIB_GCC3
 #   define CERNLIB_GFORTRAN
 #  elif defined(GCC4)
-#   if ((GCC4) >= 6)
+#   if ((GCC4) >= 10)
 #    define FortranCmd		gfortran -no-pie -fallow-invalid-boz -std=legacy -fcommon
+#   elif ((GCC4) >= 6)
+#    define FortranCmd		gfortran -no-pie -std=legacy -fcommon
 #   else
 #    define FortranCmd		gfortran
 #   endif
