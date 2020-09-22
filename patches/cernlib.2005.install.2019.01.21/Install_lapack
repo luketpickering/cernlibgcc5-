@@ -113,7 +113,7 @@ w make.inc
 q
 !
 fi
-fi
+
 
 # use INTRINSIC ETIME
 sed -i -e '{s/EXTERNAL           ETIME/INTRINSIC          ETIME/}' SRC/dsecnd.f
