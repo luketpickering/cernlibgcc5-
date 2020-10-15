@@ -1,6 +1,5 @@
 #!/bin/bash
-    
-set -x
+
 set -e
 
 BUILD_ROOT_DIR=$(pwd)

@@ -1,5 +1,20 @@
 #!/bin/bash
 
+function cernisbuilt {
+  local LIBDIR=${1}
+  for f in libariadne.a libcojets.a libfritiof.a libgeant.a \
+      libgrafX11.a libherwig.a libjetset74.a libkernlib-shift.a \
+      liblepto651.a libpacklib.a   libpawlib.a libphotos202.a \
+      libpythia6205.a libblas.a libeurodec.a libgeant321.a libgraflib.a \
+      libherwig59.a libisajet758.a libkernlib.a liblapack3.a libmathlib.a \
+      libpacklib-shift.a libpdflib804.a libphtools.a; do
+    if [ ! -f ${LIBDIR}/${f} ]; then
+      echo "${LIBDIR}/${f}"
+    fi
+  done
+  echo "yes"
+}
+
     echo "================================================================================"
     echo " Checking build environment"
     echo "================================================================================"
@@ -88,32 +103,37 @@
 
 ./pull_down_and_patch.sh cernlib_build
 
-cd cernlib_build
+ISBUILD=$( cernisbuilt cernlib_build/2005/lib )
 
-if [ -e /usr/include/freetype2/freetype ]; then
-  echo "Making local freetype2 symbolic link..."
-  mkdir -p 2005/src/include
-  ln -s /usr/include/freetype2/freetype 2005/src/include/
-fi
+if [ "${ISBUILD}" != "yes" ]; then
 
-find . -type f -exec grep -I "\-O3" \{} \; -exec echo \{} \; -exec sed -i "s:\-O3:-O:g" \{} \;
-find . -type f -exec grep -I "\-O2" \{} \; -exec echo \{} \; -exec sed -i "s:\-O2:-O:g" \{} \;
+  cd cernlib_build
 
-export CERN=$(readlink -f .)
-export CERN_LEVEL=2005
-export CERN_ROOT=${CERN}/${CERN_LEVEL}
+  if [ -e /usr/include/freetype2/freetype ]; then
+    echo "Making local freetype2 symbolic link..."
+    mkdir -p 2005/src/include
+    ln -s /usr/include/freetype2/freetype 2005/src/include/
+  fi
 
-./Install_cernlib_and_lapack
+  find . -type f -exec grep -I "\-O3" \{} \; -exec echo \{} \; -exec sed -i "s:\-O3:-O:g" \{} \;
+  find . -type f -exec grep -I "\-O2" \{} \; -exec echo \{} \; -exec sed -i "s:\-O2:-O:g" \{} \;
 
-FILES="libariadne.a  libcojets.a   libfritiof.a   libgeant.a    libgrafX11.a   libherwig.a     libjetset74.a  libkernlib-shift.a  liblepto651.a  libpacklib.a        libpawlib.a     libphotos202.a  libpythia6205.a libblas.a     libeurodec.a  libgeant321.a  libgraflib.a  libherwig59.a  libisajet758.a  libkernlib.a   liblapack3.a        libmathlib.a   libpacklib-shift.a  libpdflib804.a  libphtools.a"
-for f in $FILES; do
-  if [ ! -f ${CERN_LEVEL}/lib/$f ]; then
-    echo "[ERROR]: File 2005/lib/$f is missing, building CERNLIB presumably failed. Please check the build logs."
+  export CERN=$(readlink -f .)
+  export CERN_LEVEL=2005
+  export CERN_ROOT=${CERN}/${CERN_LEVEL}
+
+  ./Install_cernlib_and_lapack
+
+  ISBUILD=$( cernisbuilt 2005/lib )
+
+  if [ ${ISBUILD} != "yes" ]; then
+    echo "[ERROR]: After running build script, at least file ${ISBUILD} is missing. Check the build logs."
     exit 1
   fi
-done
+  
+  cd ../
+fi
+
 echo CERNLIB successfully build.
 
-cd ../
-
-echo -e '#!/bin/bash\n'"export CERN=$(readlink -f cernlib_build)\nexport CERN_LEVEL=2005\nexport PATH=\${CERN}/\${CERN_LEVEL}/bin:\${PATH}" > setup_cernlib.sh
+echo -e '#!/bin/bash\n'"export CERN=$(readlink -f cernlib_build)\nexport CERN_LEVEL=2005\nexport CERN_ROOT=\${CERN}/\${CERN_LEVEL}\nexport PATH=\${CERN}/\${CERN_LEVEL}/bin:\${PATH}" > setup_cernlib.sh
