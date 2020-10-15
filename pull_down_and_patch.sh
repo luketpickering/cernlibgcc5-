@@ -2,17 +2,19 @@
 
 set -e
 
+BUILD_DIR=${1}
+
 BUILD_ROOT_DIR=$(pwd)
 
 PATCHES_DIR=$(pwd)/patches
 
-if [ -z $1 ] || [ -e $1 ]; then
+if [ -z ${BUILD_DIR} ] || [ -e ${BUILD_DIR} ]; then
   echo "Please pass a new directory to pull-down-and-patch CERNLIB into."
   exit 1
 fi
 
-if ! mkdir $1; then
-  echo "Failed to make directory $1 for new CERNLIB install."
+if ! mkdir ${BUILD_DIR}; then
+  echo "Failed to make directory ${BUILD_DIR} for new CERNLIB install."
   exit 1
 fi
 
@@ -28,28 +30,24 @@ if [ ! -e .download_cache ]; then
   # wget --no-check-certificate http://www-zeuthen.desy.de/linear_collider/cernlib/new/cernlib.2005.install.2019.01.21.tgz
   # tar -zxvf cernlib.2005.install.2019.01.21.tgz
 
-  CACHE_DIR=$(pwd)
-
   wget --no-check-certificate http://www-zeuthen.desy.de/linear_collider/cernlib/new/cernlib-2005-all-new.tgz
   tar -zxvf cernlib-2005-all-new.tgz
 
-  cd ${PATCHES_DIR}/cernlib.2005.corr
-  tar -zcvf cernlib.2005.corr.tgz 2005
-  mv cernlib.2005.corr.tgz ${CACHE_DIR}/
-  cd -
-
-
-  cd ${PATCHES_DIR}/cernlib.2005.install.2019.01.21
-  cp ./* ${CACHE_DIR}/
-  cd -
-
-  cd ${BUILD_ROOT_DIR}
-
+  CACHE_DIR=$(pwd)
 fi
 
-cp -r .download_cache/* ${1}/
-cd ${1}
+cp -r .download_cache/* ${BUILD_DIR}/
+cd ${BUILD_DIR}
 
+cd ${PATCHES_DIR}/cernlib.2005.corr
+tar -zcvf cernlib.2005.corr.tgz 2005
+mv cernlib.2005.corr.tgz ${BUILD_DIR}/
 cd -
 
-set +x
+
+cd ${PATCHES_DIR}/cernlib.2005.install.2019.01.21
+cp ./* ${BUILD_DIR}/
+cd -
+
+
+cd -
