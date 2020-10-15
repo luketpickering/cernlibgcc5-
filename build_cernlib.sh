@@ -126,7 +126,7 @@ if [ "${ISBUILD}" != "yes" ]; then
 
   ISBUILD=$( cernisbuilt 2005/lib )
 
-  if [ ${ISBUILD} != "yes" ]; then
+  if [ "${ISBUILD}" != "yes" ]; then
     echo "[ERROR]: After running build script, at least file ${ISBUILD} is missing. Check the build logs."
     exit 1
   fi
