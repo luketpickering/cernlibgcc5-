@@ -2,7 +2,7 @@
 
 set -e
 
-BUILD_DIR=${1}
+BUILD_DIR=$(readlink -f ${1})
 
 BUILD_ROOT_DIR=$(pwd)
 
