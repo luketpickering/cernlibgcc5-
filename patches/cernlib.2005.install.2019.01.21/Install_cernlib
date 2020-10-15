@@ -29,10 +29,19 @@ cat > comptest.F <<EOF
 EOF
 GCCVSN=`cpp -dM comptest.F | grep __VERSION__ | cut -d" " -f3 | sed -s "s/\"//g" | cut -d . -f 1`
 FC=" "
-[ "$GCCVSN" = "3" ]&&FC=g77
-[ "$GCCVSN" -ge "4" ]&&FC=gfortran
-[ "$GCCVSN" -ge "6" ]&&FC=`echo ${FC} -no-pie -std=legacy -fcommon`
-[ "$GCCVSN" -ge "10" ]&&FC=`echo ${FC} -no-pie -fallow-invalid-boz -std=legacy -fcommon`
+
+if [ "$GCCVSN" = "3" ]; then 
+  FC=g77
+elif [ "$GCCVSN" -ge "4" ]; then
+  FC=gfortran
+fi
+
+if [ "$GCCVSN" -ge "10" ]; then
+  FORTRANOPTIONS="-no-pie -fallow-invalid-boz -std=legacy -fcommon"
+elif [ "$GCCVSN" -ge "6" ]; then
+  FORTRANOPTIONS="-no-pie -std=legacy -fcommon"
+fi
+
 if [ "$GCCVSN" = " " ]; then
   echo " "
   echo "====================================="
@@ -42,7 +51,7 @@ if [ "$GCCVSN" = " " ]; then
   exit 1
 else
   check="Checking for Fortran Compiler... "
-  $FC -c comptest.F >/dev/null 2>&1
+  $FC $FORTRANOPTIONS -c comptest.F >/dev/null 2>&1
   if test -s comptest.o; then
     echo "${check}${FC}"
   else
@@ -54,6 +63,7 @@ fi
 rm -f comptest.*
 export ARCH
 export FC
+export FORTRANOPTIONS
 
 
 echo "======================================"

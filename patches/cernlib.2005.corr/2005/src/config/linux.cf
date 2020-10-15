@@ -240,13 +240,15 @@ endif									@@\
 #   define CERNLIB_GFORTRAN
 #  elif defined(GCC4)
 #   if ((GCC4) >= 10)
-#    define FortranCmd		gfortran -no-pie -fallow-invalid-boz -std=legacy -fcommon
+#    define FortranCmd		gfortran
+#    define DefaultFCOptions	-fno-automatic -fno-second-underscore -fPIC -no-pie -fallow-invalid-boz -std=legacy -fcommon
 #   elif ((GCC4) >= 6)
-#    define FortranCmd		gfortran -no-pie -std=legacy -fcommon
+#    define FortranCmd		gfortran
+#    define DefaultFCOptions	-fno-automatic -fno-second-underscore -fPIC -no-pie -std=legacy -fcommon
 #   else
 #    define FortranCmd		gfortran
+#    define DefaultFCOptions	-fno-automatic -fno-second-underscore -fPIC
 #   endif
-#   define DefaultFCOptions	-fno-automatic -fno-second-underscore
 #   define CernlibSystem	        -DCERNLIB_LINUX -DCERNLIB_UNIX -DCERNLIB_LNX -DCERNLIB_QMGLIBC -DCERNLIB_GFORTRAN -DCERNLIB_GCC4
 #   define CERNLIB_GCC4
 #   define CERNLIB_GFORTRAN

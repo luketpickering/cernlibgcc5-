@@ -10,6 +10,7 @@ function cernisbuilt {
       libpacklib-shift.a libpdflib804.a libphtools.a; do
     if [ ! -f ${LIBDIR}/${f} ]; then
       echo "${LIBDIR}/${f}"
+      return
     fi
   done
   echo "yes"

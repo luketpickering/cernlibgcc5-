@@ -36,10 +36,19 @@ cat > comptest.F <<EOF
 EOF
 GCCVSN=`cpp -dM comptest.F | grep __VERSION__ | cut -d" " -f3 | sed -s "s/\"//g" | cut -d . -f 1`
 FC=" "
-[ "$GCCVSN" = "3" ]&&FC=g77
-[ "$GCCVSN" -ge "4" ]&&FC=gfortran
-[ "$GCCVSN" -ge "6" ]&&FC=`echo ${FC} -no-pie -std=legacy -fcommon`
-[ "$GCCVSN" -ge "10" ]&&FC=`echo ${FC} -no-pie -fallow-invalid-boz -std=legacy -fcommon`
+
+if [ "$GCCVSN" = "3" ]; then 
+  FC=g77
+elif [ "$GCCVSN" -ge "4" ]; then
+  FC=gfortran
+fi
+
+if [ "$GCCVSN" -ge "10" ]; then
+  FORTRANOPTIONS="-no-pie -fallow-invalid-boz -std=legacy -fcommon"
+elif [ "$GCCVSN" -ge "6" ]; then
+  FORTRANOPTIONS="-no-pie -std=legacy -fcommon"
+fi
+
 if [ "${GCCVSN}" = "3" ]; then
     mv make.inc make.inc.orig
     ed -s make.inc.orig > /dev/null <<!
@@ -68,7 +77,61 @@ w make.inc
 q
 !
 fi
-if [ "${GCCVSN}" -ge "4" ]; then
+if [ "${GCCVSN}" -ge "10" ]; then
+mv make.inc make.inc.orig
+ed -s make.inc.orig > /dev/null <<!
+41,43c
+BLASLIB      = ../../blas\$(PLAT).a
+.
+28c
+LOADOPTS = -O -fPIC -no-pie -fallow-invalid-boz -std=legacy -fcommon
+.
+26c
+LOADER   = gfortran
+.
+24c
+NOOPT    = -fPIC -no-pie -fallow-invalid-boz -std=legacy -fcommon
+.
+22c
+OPTS     = -O -fPIC -no-pie -fallow-invalid-boz -std=legacy -fcommon
+.
+19c
+FORTRAN  = gfortran
+.
+11c
+PLAT = _$ARCH
+.
+w make.inc
+q
+!
+elif [ "${GCCVSN}" -ge "6" ]; then
+mv make.inc make.inc.orig
+ed -s make.inc.orig > /dev/null <<!
+41,43c
+BLASLIB      = ../../blas\$(PLAT).a
+.
+28c
+LOADOPTS = -O -fPIC -no-pie -std=legacy -fcommon
+.
+26c
+LOADER   = gfortran
+.
+24c
+NOOPT    = -fPIC -no-pie -std=legacy -fcommon
+.
+22c
+OPTS     = -O -fPIC -no-pie -std=legacy -fcommon
+.
+19c
+FORTRAN  = gfortran
+.
+11c
+PLAT = _$ARCH
+.
+w make.inc
+q
+!
+elif [ "${GCCVSN}" -ge "4" ]; then
 mv make.inc make.inc.orig
 ed -s make.inc.orig > /dev/null <<!
 41,43c
@@ -91,23 +154,6 @@ FORTRAN  = gfortran
 .
 11c
 PLAT = _$ARCH
-.
-w make.inc
-q
-!
-fi
-if [ "${GCCVSN}" -ge "10" ]; then
-ed -s make.inc > /dev/null <<!
-26c
-LOADER   = gfortran -no-pie -fallow-invalid-boz -std=legacy -fcommon
-.
-w make.inc
-q
-!
-elif [ "${GCCVSN}" -ge "6" ]; then
-ed -s make.inc > /dev/null <<!
-26c
-LOADER   = gfortran -no-pie -std=legacy -fcommon
 .
 w make.inc
 q
