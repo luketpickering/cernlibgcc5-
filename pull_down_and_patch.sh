@@ -32,11 +32,9 @@ if [ ! -e .download_cache ]; then
 
   wget --no-check-certificate http://www-zeuthen.desy.de/linear_collider/cernlib/new/cernlib-2005-all-new.tgz
   tar -zxvf cernlib-2005-all-new.tgz
-
-  CACHE_DIR=$(pwd)
 fi
 
-cp -r .download_cache/* ${BUILD_DIR}/
+cp -r ${BUILD_ROOT_DIR}/.download_cache/* ${BUILD_DIR}/
 cd ${BUILD_DIR}
 
 cd ${PATCHES_DIR}/cernlib.2005.corr
