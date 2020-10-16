@@ -39,14 +39,12 @@ FC=" "
 
 if [ "$GCCVSN" = "3" ]; then 
   FC=g77
+elif [ "$GCCVSN" -ge "10" ]; then
+  FC="gfortran -no-pie -fallow-invalid-boz -std=legacy -fcommon -ffixed-line-length-none"
+elif [ "$GCCVSN" -ge "6" ]; then
+  FC="gfortran -no-pie -std=legacy -fcommon -ffixed-line-length-none"
 elif [ "$GCCVSN" -ge "4" ]; then
   FC=gfortran
-fi
-
-if [ "$GCCVSN" -ge "10" ]; then
-  FORTRANOPTIONS="-no-pie -fallow-invalid-boz -std=legacy -fcommon"
-elif [ "$GCCVSN" -ge "6" ]; then
-  FORTRANOPTIONS="-no-pie -std=legacy -fcommon"
 fi
 
 if [ "${GCCVSN}" = "3" ]; then
@@ -84,19 +82,19 @@ ed -s make.inc.orig > /dev/null <<!
 BLASLIB      = ../../blas\$(PLAT).a
 .
 28c
-LOADOPTS = -O -fPIC -no-pie -fallow-invalid-boz -std=legacy -fcommon
+LOADOPTS = -O
 .
 26c
-LOADER   = gfortran
+LOADER   = gfortran -no-pie -fallow-invalid-boz -std=legacy -fcommon -ffixed-line-length-none
 .
 24c
-NOOPT    = -fPIC -no-pie -fallow-invalid-boz -std=legacy -fcommon
+NOOPT    = -fPIC 
 .
 22c
-OPTS     = -O -fPIC -no-pie -fallow-invalid-boz -std=legacy -fcommon
+OPTS     = -O
 .
 19c
-FORTRAN  = gfortran
+FORTRAN  = gfortran -no-pie -fallow-invalid-boz -std=legacy -fcommon -ffixed-line-length-none
 .
 11c
 PLAT = _$ARCH
@@ -111,19 +109,19 @@ ed -s make.inc.orig > /dev/null <<!
 BLASLIB      = ../../blas\$(PLAT).a
 .
 28c
-LOADOPTS = -O -fPIC -no-pie -std=legacy -fcommon
+LOADOPTS = -O -fPIC 
 .
 26c
-LOADER   = gfortran
+LOADER   = gfortran -no-pie -std=legacy -fcommon -ffixed-line-length-none
 .
 24c
-NOOPT    = -fPIC -no-pie -std=legacy -fcommon
+NOOPT    = -fPIC
 .
 22c
-OPTS     = -O -fPIC -no-pie -std=legacy -fcommon
+OPTS     = -O -fPIC
 .
 19c
-FORTRAN  = gfortran
+FORTRAN  = gfortran -no-pie -std=legacy -fcommon -ffixed-line-length-none
 .
 11c
 PLAT = _$ARCH

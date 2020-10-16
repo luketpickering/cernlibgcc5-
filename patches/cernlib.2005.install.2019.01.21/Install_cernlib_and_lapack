@@ -32,14 +32,12 @@ FC=" "
 
 if [ "$GCCVSN" = "3" ]; then 
   FC=g77
+elif [ "$GCCVSN" -ge "10" ]; then
+  FC="gfortran -no-pie -fallow-invalid-boz -std=legacy -fcommon -ffixed-line-length-none"
+elif [ "$GCCVSN" -ge "6" ]; then
+  FC="gfortran -no-pie -std=legacy -fcommon -ffixed-line-length-none"
 elif [ "$GCCVSN" -ge "4" ]; then
   FC=gfortran
-fi
-
-if [ "$GCCVSN" -ge "10" ]; then
-  FORTRANOPTIONS="-no-pie -fallow-invalid-boz -std=legacy -fcommon"
-elif [ "$GCCVSN" -ge "6" ]; then
-  FORTRANOPTIONS="-no-pie -std=legacy -fcommon"
 fi
 
 if [ "$GCCVSN" = " " ]; then
@@ -63,7 +61,6 @@ fi
 rm -f comptest.*
 export ARCH
 export FC
-export FORTRANOPTIONS
 
 
 echo "======================================"
