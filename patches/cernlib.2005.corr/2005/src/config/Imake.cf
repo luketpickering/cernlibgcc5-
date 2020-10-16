@@ -388,7 +388,9 @@ XCOMM $XConsortium: Imake.cf,v 1.19 95/01/05 19:24:32 kaleb Exp $
 #ifdef linux 
 #ifdef __GNUC__
 #if __GNUC__ >= 4
-# if __GNUC__ >= 6
+# if __GNUC__ >= 10
+#  define GCC4 10
+# elif __GNUC__ >= 6
 #  define GCC4 6
 # else
 #  define GCC4 4
