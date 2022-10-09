@@ -58,7 +58,7 @@
 #define PreProcessCmd		CcCmd -E
 #define PostIncDir		`CcCmd --print-libgcc-file-name | sed 's/libgcc.a/include/'`
 #define LdCombineFlags		-r
-#define OptimizedCDebugFlags	-O2 -m486 -fno-strength-reduce\
+#define OptimizedCDebugFlags	-O0 -g -m486 -fno-strength-reduce\
 					-fomit-frame-pointer
 #define StandardDefines		-Dlinux -D__i386__ -D_POSIX_SOURCE \
 				-D_BSD_SOURCE -D_GNU_SOURCE -DX_LOCALE
@@ -124,7 +124,7 @@
 # define FortranCmd             ifort
 # define XargsCmd               xargs
 # define FortranSaveFlags	-save
-# define OptimisedFortranFlags  -O2
+# define OptimisedFortranFlags  -O0 -g
 # define NoOpFortranDebugFlags  -O0
 # define DefaultFCOptions       
 # define CernlibSystem          -DCERNLIB_LINUX -DCERNLIB_UNIX -DCERNLIB_LNX -DCERNLIB_QMGLIBC -DCERNLIB_QMLXIA64
@@ -140,7 +140,7 @@
 # undef OptimizedCDebugFlags
 # undef StandardDefines
 # define DefaultCCOptions	-g -fPIC
-# define OptimizedCDebugFlags	-g -O1 -fomit-frame-pointer
+# define OptimizedCDebugFlags	-g -O0 -g -fomit-frame-pointer
 # define f2cFortran	        YES
 # define XargsCmd		xargs
 # define FortranSaveFlags	/* */ /* Everything static !? */

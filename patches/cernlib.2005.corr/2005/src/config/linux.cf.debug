@@ -113,7 +113,7 @@ XCOMM platform:  $XConsortium: linux.cf,v 1.11 95/01/23 18:32:03 kaleb Exp $
 #define PreProcessCmd		CcCmd -E
 #define PostIncDir		`CcCmd --print-libgcc-file-name | sed 's/libgcc.a/include/'`
 #define LdCombineFlags		-r
-#define OptimizedCDebugFlags	-O2 -m486 -fno-strength-reduce\
+#define OptimizedCDebugFlags	-O0 -g -m486 -fno-strength-reduce\
 					-fomit-frame-pointer
 #define StandardDefines		-Dlinux -D__i386__ -D_POSIX_SOURCE \
 				-D_BSD_SOURCE -D_GNU_SOURCE -DX_LOCALE
@@ -227,7 +227,7 @@ endif									@@\
 # undef OptimizedCDebugFlags
 # undef StandardDefines
 # define DefaultCCOptions	-g
-# define OptimizedCDebugFlags	-g -O1 -fomit-frame-pointer
+# define OptimizedCDebugFlags	-g -O0 -g -fomit-frame-pointer
 # define f2cFortran	        YES
 # define XargsCmd		xargs
 # define FortranSaveFlags	/* */ /* Everything static !? */
