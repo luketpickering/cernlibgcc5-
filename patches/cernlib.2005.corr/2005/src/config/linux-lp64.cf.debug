@@ -140,7 +140,7 @@
 # undef OptimizedCDebugFlags
 # undef StandardDefines
 # define DefaultCCOptions	-g -fPIC
-# define OptimizedCDebugFlags	-g -O0 -g -fomit-frame-pointer
+# define OptimizedCDebugFlags	-O0 -g -fomit-frame-pointer
 # define f2cFortran	        YES
 # define XargsCmd		xargs
 # define FortranSaveFlags	/* */ /* Everything static !? */
@@ -149,7 +149,7 @@
 #  if defined(GCC3)
 #   define FortranCmd		g77
 #   define DefaultFCOptions	-g -fno-automatic -fno-second-underscore -fugly-complex -fPIC
-#   define CernlibSystem	        -DCERNLIB_LINUX -DCERNLIB_UNIX -DCERNLIB_LNX -DCERNLIB_QMGLIBC -DCERNLIB_QMLXIA64 -DCERNLIB_GFORTRAN  -DCERNLIB_GCC3
+#   define CernlibSystem	        -DCERNLIB_LINUX -DCERNLIB_UNIX -DCERNLIB_LNX -DCERNLIB_QMGLIBC -DCERNLIB_QMLXIA64 -DCERNLIB_ENABLE_DEBUG -DCERNLIB_GFORTRAN  -DCERNLIB_GCC3
 #   define CERNLIB_GCC3
 #   define CERNLIB_GFORTRAN
 #  elif defined(GCC4)
@@ -160,14 +160,14 @@
 #   else
 #    define FortranCmd		gfortran
 #   endif
-#   define DefaultFCOptions	-g -fno-automatic -fno-second-underscore -fPIC
-#   define CernlibSystem	        -DCERNLIB_LINUX -DCERNLIB_UNIX -DCERNLIB_LNX -DCERNLIB_QMGLIBC -DCERNLIB_QMLXIA64 -DCERNLIB_GFORTRAN -DCERNLIB_GCC4
+#   define DefaultFCOptions	-O0 -g -fno-automatic -fno-second-underscore -fPIC
+#   define CernlibSystem	        -DCERNLIB_LINUX -DCERNLIB_UNIX -DCERNLIB_LNX -DCERNLIB_QMGLIBC -DCERNLIB_QMLXIA64 -DCERNLIB_ENABLE_DEBUG -DCERNLIB_GFORTRAN -DCERNLIB_GCC4
 #   define CERNLIB_GCC4
 #   define CERNLIB_GFORTRAN
 #  else
 #   define FortranCmd		g77
-#   define DefaultFCOptions	-g -fno-automatic -fno-second-underscore -fugly-complex -fPIC
-#   define CernlibSystem	        -DCERNLIB_LINUX -DCERNLIB_UNIX -DCERNLIB_LNX -DCERNLIB_QMGLIBC -DCERNLIB_QMLXIA64
+#   define DefaultFCOptions	-O0 -g -fno-automatic -fno-second-underscore -fugly-complex -fPIC
+#   define CernlibSystem	        -DCERNLIB_LINUX -DCERNLIB_UNIX -DCERNLIB_LNX -DCERNLIB_QMGLIBC -DCERNLIB_QMLXIA64 -DCERNLIB_ENABLE_DEBUG
 #  endif
 
 /*  The following is needed to switch off optimization for jetset */

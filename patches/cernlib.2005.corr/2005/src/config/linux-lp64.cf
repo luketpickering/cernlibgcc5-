@@ -148,7 +148,7 @@
 
 #  if defined(GCC3)
 #   define FortranCmd		g77
-#   define DefaultFCOptions	-fno-automatic -fno-second-underscore -fugly-complex -fPIC
+#   define DefaultFCOptions -O0 -g -fno-automatic -fno-second-underscore -fugly-complex -fPIC
 #   define CernlibSystem	        -DCERNLIB_LINUX -DCERNLIB_UNIX -DCERNLIB_LNX -DCERNLIB_QMGLIBC -DCERNLIB_QMLXIA64 -DCERNLIB_GFORTRAN  -DCERNLIB_GCC3
 #   define CERNLIB_GCC3
 #   define CERNLIB_GFORTRAN
@@ -160,13 +160,13 @@
 #   else
 #    define FortranCmd		gfortran
 #   endif
-#   define DefaultFCOptions	-fno-automatic -fno-second-underscore -fPIC
+#   define DefaultFCOptions -O0 -g -fno-automatic -fno-second-underscore -fPIC
 #   define CernlibSystem	        -DCERNLIB_LINUX -DCERNLIB_UNIX -DCERNLIB_LNX -DCERNLIB_QMGLIBC -DCERNLIB_QMLXIA64 -DCERNLIB_GFORTRAN -DCERNLIB_GCC4
 #   define CERNLIB_GCC4
 #   define CERNLIB_GFORTRAN
 #  else
 #   define FortranCmd		g77
-#   define DefaultFCOptions	-fno-automatic -fno-second-underscore -fugly-complex -fPIC
+#   define DefaultFCOptions -O0 -g -fno-automatic -fno-second-underscore -fugly-complex -fPIC
 #   define CernlibSystem	        -DCERNLIB_LINUX -DCERNLIB_UNIX -DCERNLIB_LNX -DCERNLIB_QMGLIBC -DCERNLIB_QMLXIA64
 #  endif
 
