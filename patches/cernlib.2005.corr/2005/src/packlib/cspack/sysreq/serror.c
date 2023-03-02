@@ -76,6 +76,9 @@ extern int      vmserrno;
 #if !defined(CERNLIB_QMGLIBC)
 extern int      sys_nerr;       /* number of system error messages      */
 extern char *sys_errlist[];     /* system error list                    */
+#elif defined(__GLIBC__) && (__GLIBC__ >= 2) && (__GLIBC_MINOR__ > 31)
+int      sys_nerr;
+char **sys_errlist;
 #endif
 #endif /* vms */
  
