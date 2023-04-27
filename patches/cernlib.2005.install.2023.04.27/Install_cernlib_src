@@ -1,0 +1,51 @@
+#!/bin/sh
+
+set -x
+
+# Get the original cernlib sources
+
+tar -zxvf $CERN/cernlib_2005.tgz --exclude 'README' --exclude 'src_include.tar.gz' > cernlib_2005_orig.lst
+
+# Unpack the source files and set up the build structure in $CERN
+
+list=`ls src_*.gz`
+
+for ffile in $list
+do
+  gunzip -c $ffile | tar xf -
+done
+
+#manually apply the contents of src_include.tar.gz because symlinks can cause problems on docker bind-mounts
+mkdir -p $CERN/2005/src/include
+ln -s $CERN/2005/src/packlib/hbook/hbook $CERN/2005/src/include/hbook
+ln -s $CERN/2005/src/pawlib/paw/paw $CERN/2005/src/include/paw
+ln -s $CERN/2005/src/packlib/zebra/zebra $CERN/2005/src/include/zebra
+ln -s $CERN/2005/src/cfortran $CERN/2005/src/include/cfortran
+ln -s $CERN/2005/src/graflib/higz/higz $CERN/2005/src/include/higz
+
+# Overload corrections to cernlib 2005
+
+tar -zxvf $CERN/cernlib.2005.corr.tgz > cernlib_corr.lst
+
+#manually apply the contents of src_include.tar.gz because symlinks can cause problems on docker bind-mounts
+ln -s $CERN/2005/src/cfortran/Examples $CERN/2005/src/cfortran/eg
+ln -s $CERN/2005/src/cfortran/Examples $CERN/2005/src/cfortran/eg
+ln -s $CERN/2005/src/cfortran/Examples/easy/easy.f $CERN/2005/src/cfortran/Examples/e2/e2_f.f
+ln -s $CERN/2005/src/cfortran/Examples/easy/easy.f $CERN/2005/src/cfortran/Examples/user/user_f.f
+
+
+# Make sure that "kuip" uses its own "strndup" version
+
+sed -i -e '{s/strndup/Strndup/g}' \
+  ./2005/src/packlib/kuip/code_kuip/kalias.c \
+  ./2005/src/packlib/kuip/code_kuip/kbrow.c \
+  ./2005/src/packlib/kuip/code_kuip/kedit.c \
+  ./2005/src/packlib/kuip/code_kuip/kexec.c \
+  ./2005/src/packlib/kuip/code_kuip/kkern.c \
+  ./2005/src/packlib/kuip/code_kuip/kmacro.c \
+  ./2005/src/packlib/kuip/code_kuip/kmath.c \
+  ./2005/src/packlib/kuip/code_kuip/kmenu.c \
+  ./2005/src/packlib/kuip/code_motif/kmfile.c \
+  ./2005/src/packlib/kuip/kuip/kstring.h \
+  ./2005/src/packlib/kuip/ykuip/kmath.y
+

@@ -14,7 +14,6 @@ echo "installing cernlib sources"
 
 ./Install_cernlib_src
 
-
 # Define the cernlib version
 
 export CERN_LEVEL=`gunzip -c src_Imakefile.tar.gz | tar tf - | awk -F/ '{print $1}'`
