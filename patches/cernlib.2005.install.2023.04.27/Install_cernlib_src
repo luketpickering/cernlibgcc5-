@@ -1,7 +1,5 @@
 #!/bin/sh
 
-set -x
-
 # Get the original cernlib sources
 
 tar -zxvf $CERN/cernlib_2005.tgz --exclude 'README' --exclude 'src_include.tar.gz' > cernlib_2005_orig.lst
